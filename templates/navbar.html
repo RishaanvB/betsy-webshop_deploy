@@ -1,0 +1,73 @@
+{% include "offcanvas_sidecart.html" %}
+
+
+<nav
+  class="navbar navbar-expand-md navbar-light bg-light sticky-top"
+  
+>
+  <div class="container py-3">
+    <a class="navbar-brand" href="{{url_for('home') }}"
+      ><img
+        src="{{url_for('static', filename='assets/brand.svg')}}"
+        alt=""
+        width="40"
+        class="d-inline-block align-text-top"
+    /></a>
+    {% include "searchbar.html" %}
+
+   
+  
+        <!-- search bar -->
+        
+        <ul class="nav">
+        {% if current_user.is_authenticated %}
+
+        <li class="nav-item dropdown position-relative d-flex align-items-center">             
+          <div class="profile-icon-container" id="navbarDropdown" data-bs-toggle="dropdown" aria-expanded="false" >
+            <img
+            style="width: 35px; height: 35px; object-fit: cover"
+            class="rounded-circle mx-3 profile-icon d-block align-bottom "
+            src="{{url_for('static', filename='/profile_pics/' + current_user.profile_pic )}}"
+            alt="user thumbnail"
+          />
+          </div>
+
+          <ul class="dropdown-menu position-absolute" aria-labelledby="navbarDropdown">
+            <li>
+              <a class="dropdown-item" href="{{ url_for('account') }}"
+                >Account</a
+              >
+            </li>
+            <li><hr class="dropdown-divider" /></li>
+            <li>
+              <a class="dropdown-item" href="{{url_for('logout')}}">Logout</a>
+            </li>
+          </ul>
+        </li>
+        <li class="d-flex cart-icon position-relative" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart" aria-controls="offcanvasCart" >
+          <i class="bi bi-cart4" style="font-size: 2rem;"></i>
+          <span class="position-absolute top-100 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: .7rem;">{{session['cart'] | length}}</span>
+        </li>
+
+        {% else %}
+
+        <li
+          class="nav-link fw-bolder d-flex align-items-center login-btn px-0 text-dark"
+          data-bs-toggle="modal"
+          href="#loginModalToggle"
+          role="button"
+        >
+          <i
+            class="bi bi-person-circle mx-3 login-icon"
+            style="font-size: 2rem"
+          ></i>
+          <a class="nav-link px-0 text-dark" role="button">Login</a>
+        </li>
+
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
+{% if not current_user.is_authenticated %} {% include "modal_login_register.html" %} {% endif
+%}

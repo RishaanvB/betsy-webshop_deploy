@@ -1,0 +1,92 @@
+<!-- inputfield error macro -->
+{% macro with_errors(field) %}
+<!--  -->
+{% if field.errors %}
+<!--  -->
+{% set css_class = 'form-control-lg is-invalid ' + kwargs.pop('class') %}
+<!--  -->
+{{ field(class=css_class, **kwargs) }}
+<div class="invalid-feedback">
+  {% for error in field.errors %}
+  <small>{{ error }}</small>
+  {% endfor %}
+</div>
+
+{% else %} {{ field(**kwargs) }} {% endif %} {% endmacro %}
+
+<div class="container p-0 py-4 mx-auto">
+  <form
+    action="{{url_for('add_product')}}"
+    method="POST"
+    enctype="multipart/form-data"
+    class="row g-3 mx-auto"
+  >
+    {{ add_product_form.hidden_tag() }}
+    <div class="d-flex justify-content-between">
+      <h4 class="mb-2 fw-bolder">Add Product</h4>
+    </div>
+
+    <div class="form-group col-md-12">
+      <div class="input-group input-group-sm">
+        {{add_product_form.name.label(class="input-group-text bg-secondary
+        text-light border border-2 border-secondary ")}}
+        {{with_errors(add_product_form.name, class="form-control border border-2
+        border-secondary",maxlength="50")}}
+      </div>
+    </div>
+    <div class="form-group col-md-12">
+      <div class="input-group input-group-sm">
+        {{add_product_form.price_per_unit.label(class="input-group-text
+        bg-secondary text-light border border-2 border-secondary ")}}
+        {{with_errors(add_product_form.price_per_unit, class="form-control
+        border border-2 border-secondary",maxlength="8")}}
+      </div>
+      <div class="form-text">Seperate cents with dot : 10.00</div>
+    </div>
+    <div class="form-group col-md-12">
+      <div class="input-group input-group-sm">
+        {{add_product_form.stock.label(class="input-group-text bg-secondary
+        text-light border border-2 border-secondary ")}}
+        {{with_errors(add_product_form.stock, class="form-control border
+        border-2 border-secondary form-select")}}
+      </div>
+      <div class="form-text">How many do you want to add?</div>
+    </div>
+    <div class="form-group col-md-12">
+      <div class="input-group input-group-sm">
+        {{add_product_form.description.label(class="input-group-text
+        bg-secondary text-light border border-2 border-secondary")}}
+        {{with_errors(add_product_form.description, class="form-control border
+        border-2 border-secondary",maxlength="50")}}
+      </div>
+      <div class="form-text">Whatcha selling?</div>
+    </div>
+
+    <div class="input-group input-group-sm">
+      {{add_product_form.tags.label(class="input-group-text bg-secondary
+      text-light border border-2 border-secondary")}}
+    </div>
+    <div class="input-group input-group-sm d-flex align-items-center">
+      {% for tag in add_product_form.tags %}
+      <div class="form-check form-switch me-4">
+        {{ tag(class="form-check-input")}}
+        {{tag.label(class="form-check-label")}}
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="form-group col-md-12">
+      <div class="input-group input-group-sm">
+        {{add_product_form.product_pic.label(class="input-group-text
+        bg-secondary text-light border border-2 border-secondary ")}}
+        {{with_errors(add_product_form.product_pic, class="form-control border
+        border-2 border-secondary")}}
+      </div>
+    </div>
+
+    <span class="form-group" role="button">
+      {{ add_product_form.add_product(class="btn btn-warning text-dark
+      fw-bolder") }}
+    </span>
+  </form>
+</div>

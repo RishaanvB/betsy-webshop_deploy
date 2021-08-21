@@ -1,0 +1,27 @@
+<form
+  style="max-width: 860px"
+  action="{{url_for('search')}}"
+  method="POST"
+  class="px-0 mt-2 mt-md-0 order-last order-md-0 flex-grow-1"
+>
+  {{ search_form.hidden_tag() }}
+  <div class="input-group">
+    <span
+      class="input-group-text bg-dark border border-2 border-dark border-end-0"
+      id="searchIconBackground"
+    >
+      <i class="bi bi-search" style="color: white">
+        {{search_form.submit(id="SearchBarInput")}}
+      </i>
+    </span>
+
+    {{search_form.search_term(class="position-relative form-control rounded-0
+    btn-dark bg-white text-dark border-2 border-start-0",
+    placeholder="Search")}}
+
+    <!-- categories -->
+    {{search_form.search_tag(id="categorySelect", class="form-select
+    border-end-3 btn-light bg-white text-dark border border-dark border-2
+    border-start-0", style="max-width:150px")}}
+  </div>
+</form>

@@ -1,0 +1,132 @@
+<!-- inputfield error macro -->
+{% macro with_errors(field) %}
+<!--  -->
+{% if field.errors %}
+<!--  -->
+{% set css_class = 'form-control is-invalid ' + kwargs.pop('class') %}
+<!--  -->
+{{ field(class=css_class, **kwargs) }}
+<div class="invalid-feedback">
+  {% for error in field.errors %}
+  <small>{{ error }}</small>
+  {% endfor %}
+</div>
+
+{% else %} {{ field(**kwargs) }} {% endif %} {% endmacro %}
+
+<div class="container p-0 py-4 mx-auto">
+  <form
+    action="{{url_for('update_account')}}"
+    method="POST"
+    enctype="multipart/form-data"
+    class="row g-3 mx-auto"
+  >
+    {{ update_account_form.hidden_tag() }}
+    <div class="d-flex justify-content-between align-items-center">
+      <h4 class="mb-2 fw-bolder">Change Profile</h4>
+      <img
+        style="width: 80px; height: 80px; object-fit: cover"
+        class="rounded-circle"
+        src="{{profile_pic}}"
+        alt="user thumbnail"
+      />
+    </div>
+
+    <div class="form-group col-md-12">
+      <div class="input-group input-group-sm">
+        {{update_account_form.username.label(class="input-group-text
+        bg-secondary text-light border border-2 border-secondary ")}}
+        {{with_errors(update_account_form.username, class="form-control border
+        border-2 border-secondary",value=current_user.username,
+        maxlength="30")}}
+      </div>
+    </div>
+    <div class="form-group col-md-12">
+      <div class="input-group input-group-sm">
+        {{update_account_form.first_name.label(class="input-group-text
+        bg-secondary text-light border border-2 border-secondary ")}}
+        {{with_errors(update_account_form.first_name, class="form-control border
+        border-2
+        border-secondary",value=current_user.first_name,maxlength="30")}}
+      </div>
+    </div>
+    <div class="form-group col-md-12">
+      <div class="input-group input-group-sm">
+        {{update_account_form.last_name.label(class="input-group-text
+        bg-secondary text-light border border-2 border-secondary ")}}
+        {{with_errors(update_account_form.last_name, class="form-control border
+        border-2
+        border-secondary",value=current_user.last_name,maxlength="120")}}
+      </div>
+    </div>
+    <div class="form-group col-md-12">
+      <div class="input-group input-group-sm">
+        {{update_account_form.address.label(class="input-group-text bg-secondary
+        text-light border border-2 border-secondary ")}}
+        {{with_errors(update_account_form.address, class="form-control border
+        border-2 border-secondary",value=current_user.address,maxlength="200")}}
+      </div>
+    </div>
+    <div class="form-group col-md-12">
+      <div class="input-group input-group-sm">
+        {{update_account_form.city.label(class="input-group-text bg-secondary
+        text-light border border-2 border-secondary ")}}
+        {{with_errors(update_account_form.city, class="form-control border
+        border-2 border-secondary",value=current_user.city,maxlength="50")}}
+      </div>
+    </div>
+    <div class="form-group col-md-12">
+      <div class="input-group input-group-sm">
+        {{update_account_form.country.label(class="input-group-text bg-secondary
+        text-light border border-2 border-secondary ")}}
+        {{with_errors(update_account_form.country, class="form-control
+        form-select border border-2
+        border-secondary",value=current_user.country)}}
+      </div>
+    </div>
+
+    <div class="form-group col-md-12">
+      <div class="input-group input-group-sm">
+        {{update_account_form.email.label(class="input-group-text bg-secondary
+        text-light border border-2 border-secondary ")}}
+        {{with_errors(update_account_form.email, class="form-control border
+        border-2 border-secondary",value=current_user.email,maxlength="50")}}
+      </div>
+      <div class="form-text">How can we contact you?</div>
+    </div>
+
+    <div class="form-group col-md-12">
+      <div class="input-group input-group-sm">
+        {{update_account_form.cc_number.label(class="input-group-text
+        bg-secondary text-light border border-2 border-secondary ")}}
+        {{with_errors(update_account_form.cc_number, class="form-control border
+        border-2
+        border-secondary",value=current_user.cc_number,maxlength="20")}}
+      </div>
+      <div class="form-text">Numbers only please. Skip dashes.</div>
+    </div>
+    <div class="form-group col-md-12">
+      <div class="input-group input-group-sm">
+        {{update_account_form.profile_pic.label(class="input-group-text
+        bg-secondary text-light border border-2 border-secondary ")}}
+        {{with_errors(update_account_form.profile_pic, class="form-control
+        border border-2 border-secondary")}}
+      </div>
+    </div>
+    <span class="form-group" role="button">
+      {{ update_account_form.update(class="btn btn-warning text-dark fw-bolder")
+      }}
+    </span>
+    <div class="mt-2">
+      <small class="text-danger">Do you want to delete you account?</small>
+      <small
+        type="button"
+        class="text-danger text-decoration-underline"
+        data-bs-toggle="modal"
+        data-bs-target="#deleteAccountModal"
+      >
+        Click here.
+      </small>
+    </div>
+  </form>
+</div>

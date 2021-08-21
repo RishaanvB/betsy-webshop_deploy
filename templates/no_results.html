@@ -1,0 +1,37 @@
+{% extends "base.html" %} {% block content %}
+<div class="container py-5">
+  <div class="p-5 mb-4 bg-dark rounded-3 search-results-banner banner">
+    <div class="container-fluid py-5">
+      <h1 class="display-5 fw-bold text-white">Sale!</h1>
+      <p class="col-md-8 fs-4 text-white">
+        More than 80% discount on all our products!
+      </p>
+      <button class="btn btn-light btn-lg" type="button">Check it out!</button>
+    </div>
+  </div>
+
+  <div class="card text-center">
+    <div class="card-header">
+      <h1 class="display-5">
+        <i class="bi bi-emoji-frown-fill text-danger"></i> No Results
+        <i class="bi bi-emoji-frown-fill text-danger"></i>
+      </h1>
+    </div>
+    <div class="card-body">
+      <blockquote class="blockquote mb-0">
+        <p>Seek and sometimes you shall find.</p>
+        <footer class="blockquote-footer">The Internet</footer>
+      </blockquote>
+    </div>
+  </div>
+  <h3 class="mt-4 text-center">
+    We're sorry, but we couldn't find any results for '{{search_query}}'
+  </h3>
+  <h5>What can you do?</h5>
+  <ul>
+    <li>Check your spelling.</li>
+    <li>Try a different search query.</li>
+    <li>Stop Trying. :)</li>
+  </ul>
+  {% endblock %}
+</div>

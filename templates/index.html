@@ -1,0 +1,147 @@
+{% extends "base.html" %} {% block content %}
+
+<div class="container py-5">
+
+  {% if current_user.is_authenticated %}
+  <div class="p-5 mb-4 bg-dark rounded-3 index-banner-logged-in banner">
+    <div class="container-fluid py-5">
+      <h1 class="display-5 fw-bold text-white">
+        Welcome to Betsy's {{current_user.first_name }}!
+      </h1>
+      <p class="col-md-8 fs-4 text-white">
+        Enjoy and check out all of the products Betsy users have to offer!
+      </p>
+      <a
+        href="{{url_for('search_results', search_term='All', search_tag='All')}}"
+        role="button"
+        class="btn btn-light"
+        type="button"
+        >All Products</a
+      >
+    </div>
+  </div>
+  {% else %}
+  <div class="p-5 mb-4 bg-dark rounded-3 join-now-banner banner">
+    <div class="container-fluid py-5">
+      <h1 class="display-5 fw-bold text-white">Join Betsy!</h1>
+      <p class="col-md-8 fs-4 text-white">
+        Betsy's has one of the best products out there. Come join us and enjoy
+        over a gazillion different homemade products.
+      </p>
+      <button
+        class="btn btn-warning btn-lg"
+        type="button"
+        href="#registerModalToggle"
+        data-bs-toggle="modal"
+      >
+        Join Now!
+      </button>
+    </div>
+  </div>
+
+  {% endif %}
+  <div class="row">
+    <div class="col-md-7 mb-4">
+      <div
+        class="
+          h-100
+          p-5
+          text-white
+          bg-dark
+          rounded-3
+          shop-in-style-banner
+          banner
+        "
+      >
+        <h2>Shop in style</h2>
+        <p>
+          Swap the background-color utility and add a `.text-*` color utility to
+          mix up the jumbotron look. Then, mix and match with additional
+          component themes and more.
+        </p>
+        <a
+          href="{{url_for('search_results', search_term='All', search_tag='All')}}"
+          role="button"
+          class="btn btn-outline-light"
+          type="button"
+          >Shop Now!</a
+        >
+      </div>
+    </div>
+    <div class="col-md-5 mb-4">
+      <div
+        class="
+          h-100
+          p-5
+          text-white
+          bg-light
+          border
+          rounded-3
+          sale-banner
+          banner
+        "
+      >
+        <h2>Check out the sales!!!</h2>
+        <p>
+          Or, keep it light and add a border for some added definition to the
+          boundaries of your content. Be sure to look under the hood at the
+          source HTML here as we've adjusted the alignment and sizing of both
+          column's content for equal-height.
+        </p>
+        <a
+          href="{{url_for('search_results', search_term='All', search_tag='All')}}"
+          role="button"
+          class="btn btn-danger text-white"
+          type="button"
+          >Discount!</a
+        >
+      </div>
+    </div>
+  </div>
+  <h2 class="border-top py-4 mt-4 text-center">The Betsy Way</h2>
+
+  <div
+    class="
+      d-flex
+      align-items-baseline
+      row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4
+      g-4
+      pb-5
+    "
+  >
+    <div class="col">
+      <i class="bi bi-person-check fs-1 text-primary"></i>
+      <div>
+        <h4 class="fw-bold mb-2 pb-2 border-bottom border-warning">
+          Get an account!
+        </h4>
+        <p>Paragraph of text beneath the heading to explain the heading.</p>
+      </div>
+    </div>
+    <div class="col">
+      <i class="bi bi-cup-straw fs-1 text-danger"></i>
+      <div>
+        <h4 class="fw-bold mb-2 pb-2 border-bottom border-warning">
+          Add a product!
+        </h4>
+        <p>Paragraph of text beneath the heading to explain the heading.</p>
+      </div>
+    </div>
+    <div class="col">
+      <i class="bi bi-credit-card-2-front fs-1 text-warning"></i>
+      <div>
+        <h4 class="fw-bold mb-2 pb-2 border-bottom border-warning">Sell it!</h4>
+        <p>Paragraph of text beneath the heading to explain the heading.</p>
+      </div>
+    </div>
+    <div class="col">
+      <i class="bi bi-currency-exchange fs-1 text-success"></i>
+      <div>
+        <h4 class="fw-bold mb-2 pb-2 border-bottom border-warning">Cash in!</h4>
+        <p>Paragraph of text beneath the heading to explain the heading.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,36 @@
+
+
+<!-- inputfield error macro -->
+{% macro with_errors(field) %}
+<!--  -->
+{% if field.errors %}
+<!--  -->
+{% set css_class = 'form-control form-control-lg is-invalid ' +
+kwargs.pop('class') %}
+<!--  -->
+{{ field(class=css_class, **kwargs) }}
+<div class="invalid-feedback">
+  {% for error in field.errors %}
+  <small>{{ error | e }}</small>
+  {% endfor %}
+</div>
+
+{% else %} {{ field(**kwargs) }} {% endif %} {% endmacro %}
+
+<form action="{{ url_for('reset_request') }}" method="POST">
+  {{ request_form.hidden_tag() }}
+
+  <fieldset class="form-group row">
+    <div class="form-floating mt-4 px-2">
+      {{with_errors(request_form.email, class="form-control
+      form-control-lg",placeholder="name@example.com",
+      maxlength="50",autocomplete="email") }}
+      <!--  -->
+      {{request_form.email.label(class="form-control-label") }}
+    </div>
+  </fieldset>
+
+  <div class="form-group mt-4 mb-2 d-grid">
+    {{ request_form.submit(class="btn btn-warning") }}
+  </div>
+</form>

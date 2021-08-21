@@ -1,0 +1,113 @@
+{% extends "base.html" %} {% block content %}
+
+<div class="container py-5">
+  <div class="p-5 mb-4 bg-dark rounded-3 search-results-banner banner">
+    <div class="container-fluid py-5">
+      <h1 class="display-5 fw-bold text-white">Sale!</h1>
+      <p class="col-md-8 fs-4 text-white">
+        More than 80% discount on all our products!
+      </p>
+      <button class="btn btn-light btn-lg" type="button">Check it out!</button>
+    </div>
+  </div>
+
+  <div
+    class="
+      alert alert-info
+      d-flex
+      align-items-center
+      justify-content-center
+      alert-dismissible
+      fade
+      show
+    "
+    role="alert"
+  >
+    <i class="bi bi-info-circle me-2" style="font-size: 1.5rem"></i>
+    <div class="text-center">
+      <h5 class="text-center my-3">
+        {% if product_count == 1 %} We've found {{ product_count }} result for
+        '{{ search_tuple[0] }}' in '{{ search_tuple[1] }}'. {% else %} We've
+        found {{ product_count }} results for '{{ search_tuple[0] }}' in '{{
+        search_tuple[1] }}'. {% endif %}
+      </h5>
+    </div>
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="alert"
+      aria-label="Close"
+    ></button>
+  </div>
+
+  <div class="album" id="page_top">
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
+      {% for product in product_list %} {% include "product_featurette.html" %}
+      {% endfor%}
+    </div>
+  </div>
+
+  <nav
+    class="btn-group mx-auto text-center d-block mt-4"
+    aria-label="Page navigation example"
+  >
+    {% set cur_page = pagination.get_page() %}
+    <!--  -->
+    {% set page_count = pagination.get_page_count() %}
+    <!--  -->
+
+    <ul class="pagination justify-content-center">
+      {% if cur_page > 1 %}
+      <li class="page-item">
+        <a
+          class="page-link text-dark"
+          href="{{ request.path }}?page=1#page_top"
+          aria-label="First Page"
+        >
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      <li class="page-item text-dark">
+        <a
+          class="page-link text-dark"
+          href="{{ request.path }}?page={{cur_page - 1}}#page_top"
+          >{{cur_page - 1}}</a
+        >
+      </li>
+      {% endif %}
+
+      <li class="page-item text-dark">
+        <a
+          href="#page_top"
+          role="button"
+          type="button"
+          class="page-link btn btn-warning text-dark bg-warning"
+          >{{cur_page}}</a
+        >
+      </li>
+      {% if cur_page != page_count %}
+
+      <li class="page-item text-dark">
+        <a
+          class="page-link text-dark"
+          href="{{ request.path }}?page={{cur_page + 1}}#page_top"
+          aria-label="Next"
+        >
+          {{cur_page + 1}}
+        </a>
+      </li>
+      <li class="page-item text-dark">
+        <a
+          class="page-link text-dark"
+          href="{{ request.path }}?page={{page_count}}#page_top"
+          aria-label="Last Page"
+        >
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+      {% endif %}
+    </ul>
+  </nav>
+</div>
+
+{% endblock content %}

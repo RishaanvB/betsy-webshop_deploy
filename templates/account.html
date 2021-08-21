@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+<!-- macro for inputerrors -->
+{% block content %} {% macro with_errors(field) %} {% if field.errors %} {% set
+css_class = 'form-control form-control-lg is-invalid ' + kwargs.pop('class', '')
+%} {{ field(class=css_class, **kwargs) }}
+<div class="invalid-feedback">
+  {% for error in field.errors %}
+  <small>{{ error|e }}</small>
+  {% endfor %}
+</div>
+
+{% else %} {{ field(**kwargs) }} {% endif %} {% endmacro %}
+
+<!-- macro for seperate input groups -->
+{% macro account_form_group(name="", input="", col=12, value="", textinfo="",
+class="form-control border border-2 border-secondary") %}
+<div class="form-group col-md-{{col}}">
+  <div class="input-group input-group-sm">
+    <span
+      class="
+        input-group-text
+        bg-secondary
+        text-light
+        border border-2 border-secondary
+      "
+      >{{name}}
+    </span>
+    {{with_errors(input, class=class, value=value) }}
+  </div>
+  <div class="form-text">{{textinfo}}</div>
+</div>
+{% endmacro %}
+
+<!-- Delete AccountModal -->
+{% include "modal_delete_account.html" %}
+
+<!-- Delete All Products Modal -->
+{% include "modal_delete_all_products.html" %} {% include 'account_navbar.html'
+%}
+
+<div class="container">
+  <div class="album my-4">
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
+      {% for product in user_products %} {% include "modal_delete_product.html"
+      %} {% include "product_featurette.html" %} {% endfor%}
+    </div>
+  </div>
+
+  <div class="border my-5"></div>
+  {% if user_products | length >= 1%}
+  <button
+    type="button"
+    class="btn btn-danger my-4"
+    data-bs-toggle="modal"
+    data-bs-target="#deleteAllProductsModal"
+  >
+    Delete All Products
+  </button>
+</div>
+{% endif %} {% endblock content %}

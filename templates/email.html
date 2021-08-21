@@ -1,0 +1,30 @@
+
+
+<a href='https://postimg.cc/hXFSptD3' target='_blank'><img src='https://i.postimg.cc/hXFSptD3/brand-png.png' border='0' alt='brand-png'/></a>
+
+<h2>Hey {{user.username}}</h2>
+
+<h3>
+    You're receiving this email because someone (hopefully you) requested to
+    change your password. If you did not initiate this, you can disregard this
+    email.
+</h3>
+
+<h3>
+    If you would like to continue and reset your password, please click the
+    following link:
+</h3>
+
+<button style="outline: none; border: none;padding: 1rem; background-color: #ffc107;" class="token"><a style='text-decoration:none;font-size:1.2rem;color:black;' href="{{url_for('reset_token', token=token, _external=True)}}">Reset your password</a></button>
+
+<p>
+    As a friendly reminder, your account details are:
+    <ul>
+        <li>Username: {{user.username}}</li>
+        <li>Email: {{user.email}}</li>
+    </ul>
+</p>
+<small>This email is valid for 15 min from the time of receiving</small>
+
+
+

@@ -1,0 +1,16 @@
+{% if bannerinfo %}
+
+<div class="p-5 mb-4 bg-dark rounded-3 {{bannerinfo.banner_bg}} banner">
+  <div class="container-fluid py-5">
+    <h1 class="display-5 fw-bold text-white">{{bannerinfo.banner_h1}}</h1>
+    <p class="col-md-8 fs-4 text-white">{{bannerinfo.banner_text}}</p>
+  </div>
+</div>
+{% else %}
+<div class="p-5 mb-4 bg-dark rounded-3 {{bannerinfo.banner_bg}} banner">
+    <div class="container-fluid py-5">
+      <h1 class="display-5 fw-bold text-white">Welcome</h1>
+      <p class="col-md-8 fs-4 text-white">Enjoy Betsy's</p>
+    </div>
+  </div>
+  {% endif %}

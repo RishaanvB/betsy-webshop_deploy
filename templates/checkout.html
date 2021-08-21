@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+<!-- inputfield error macro -->
+{% macro with_errors(field) %}
+<!--  -->
+{% if field.errors %}
+<!--  -->
+{% set css_class = 'form-select form-select-sm w-25 me-4 productAmountCheckout
+is-invalid' + kwargs.pop('class') %}
+<!--  -->
+{{ field(class=css_class, **kwargs) }}
+<div class="invalid-feedback">
+  {% for error in field.errors %}
+  <small>{{ error }}</small>
+  {% endfor %}
+</div>
+{% else %} {{ field(**kwargs) }} {% endif %} {% endmacro %} {% block content %}
+<div class="container py-5">
+  <div class="p-5 mb-4 bg-dark rounded-3 checkout-banner banner">
+    <div class="container-fluid py-5">
+      <h1 class="display-5 fw-bold text-white">Finish your order.</h1>
+    </div>
+  </div>
+
+  <div class="py-4 text-center border-bottom border-top border-2 mb-4">
+    <img
+      src="{{url_for('static', filename='assets/brand.svg')}}"
+      alt=""
+      width="100"
+      class="d-inline-block align-text-top"
+    />
+    <h2 class="my-3">Billing Information</h2>
+  </div>
+
+  <form
+    action="{{url_for('checkout_payment')}}"
+    method="POST"
+    class="row d-flex justify-content-between"
+  >
+    <!-- csrf  -->
+    {{product_amount_form.hidden_tag()}}
+    <div class="col-xl-7 order-1">
+      <h4 class="d-flex justify-content-between align-items-center mb-3">
+        <span>Your items.</span>
+        <span class="badge bg-warning text-dark rounded-pill"
+          >{{session['cart']| length}}</span
+        >
+      </h4>
+      <!-- product start -->
+      {% set prefix = 'product_id-' %}
+      <!--  -->
+      {% for product in all_products %}
+      <!--  -->
+      {% if product.id in session['cart'] %}
+      <div class="row my-4">
+        <div class="col-md-5">
+          <img
+            class="img-thumbnail"
+            src="{{ url_for('static', filename='product_pics/' + product.product_pic) }}"
+            alt=""
+          />
+        </div>
+        <div class="row col-md-7 d-flex">
+          <div>
+            <h5>{{ product.name }}</h5>
+            {% if product.description %}
+            <p class="fs-6">{{ product.description }}</p>
+            {% else %}
+            <p class="fs-6">This product does not have a description</p>
+            {% endif %}
+            <div class="d-flex">
+              {% for producttag in product.tags %}
+              <p class="me-1 fs-small">{{producttag.tag.name}}</p>
+              {% endfor %}
+            </div>
+          </div>
+          <div class="d-flex align-items-end mt-auto">
+            <span class="text-muted pb-1 me-2">Amount: </span>
+            {{with_errors(product_amount_form[prefix ~ product.id ~
+            ""],class="form-select form-select-sm w-25 me-4
+            productAmountCheckout", style="max-width:60px;")}}
+
+            <a
+              role="button"
+              class="button ms-4"
+              href="{{url_for('handle_product_in_cart', product_id=product.id)}}"
+            >
+              <i class="bi bi-trash-fill text-danger fs-6"></i
+            ></a>
+            <div class="ms-auto d-flex align-items-center">
+              <i class="bi bi-currency-euro"></i>
+              <h5
+                class="productPrice my-0"
+                data-price-per-unit="{{product.price_per_unit}}"
+                id="price-data-{{product.id}}"
+              >
+                {{ product.price_per_unit }}
+              </h5>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr class="my-2" />
+      {% endif %} {% endfor %}
+      <!--  -->
+    </div>
+    <ul class="order-3 my-4">
+      <li
+        class="
+          list-group-item
+          d-flex
+          justify-content-between
+          bg-dark
+          text-warning
+        "
+      >
+        <span class="fs-3">Total (EUR)</span>
+        <h3 id="totalPriceCheckout"></h3>
+      </li>
+    </ul>
+    <div class="col-xl-5 order-2">
+      <h4 class="mb-3">Payment</h4>
+      <div class="my-3">
+        <div class="form-check">
+          <input
+            id="credit"
+            name="paymentMethod"
+            type="radio"
+            class="form-check-input"
+            checked
+          />
+          <label class="form-check-label" for="credit">Credit card</label>
+        </div>
+      </div>
+      <div class="row gy-3">
+        <div class="col-lg-6">
+          <label for="cc-name" class="form-label">Name on card</label>
+          {% if current_user.first_name %}
+          <input
+            type="text"
+            class="form-control"
+            id="cc-name"
+            value="{{  get_name_on_cc(current_user.id)  }}"
+          />
+          {% else %}
+          <input
+            type="text"
+            class="form-control"
+            id="cc-name"
+            value="{{(  current_user.username  )}}"
+          />
+          {% endif %}
+          <small class="text-muted">Full name as displayed on card</small>
+        </div>
+        <div class="col-lg-6">
+          <label for="cc-number" class="form-label">Credit card number</label>
+          {% if current_user.cc_number %}
+          <input
+            type="text"
+            class="form-control"
+            id="cc-number"
+            required
+            value="{{create_hidden_cc(current_user.cc_number)}}"
+          />
+          {% else %}
+          <input
+            type="text"
+            class="form-control"
+            id="cc-number"
+            required
+            value=""
+          />
+          {% endif %}
+          <div class="invalid-feedback">Credit card number is required</div>
+        </div>
+        <div class="col-sm-5 col-md-6">
+          <label for="cc-expiration" class="form-label">Expiration</label>
+          <input type="text" class="form-control" id="cc-expiration" />
+        </div>
+        <div class="col-md-4 col-lg-3">
+          <label for="cc-cvv" class="form-label">CVV</label>
+          <input type="text" class="form-control" id="cc-cvv" />
+        </div>
+      </div>
+    </div>
+    {{product_amount_form.submit(class="btn btn-warning order-last my-1")}}
+  </form>
+</div>
+
+{% endblock content %}
