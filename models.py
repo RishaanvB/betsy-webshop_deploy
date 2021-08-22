@@ -1,9 +1,8 @@
 # importing db for access to actual peewee database and db_wrapper to access Model
 
-from enum import unique
 from flask_login.mixins import UserMixin
 from app import db_wrapper, db, app
-from datetime import datetime
+from datetime import datetime, timedelta
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from peewee import (
     BlobField,
@@ -66,7 +65,7 @@ class Product(BaseModel):
     stock = IntegerField(default=1)
     owner = ForeignKeyField(User, backref="products")
     product_pic = CharField(null=True, default="default_product.jpg")
-    date_posted = DateTimeField(formats="%Y-%m-%d %H:%M", default=datetime.now)
+    date_posted = DateTimeField(formats="%Y-%m-%d %H:%M", default=datetime.utcnow)
 
 
 Product.add_index(Product.name, Product.description)
