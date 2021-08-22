@@ -67,7 +67,7 @@ class Product(BaseModel):
     owner = ForeignKeyField(User, backref="products")
     product_pic = CharField(null=True, default="default_product.jpg")
     date_posted = DateTimeField(
-        formats="%Y-%m-%d %H:%M", default=datetime.fromtimestamp()
+        formats="%Y-%m-%d %H:%M", default=datetime.fromtimestamp(datetime.now())
     )
 
 
