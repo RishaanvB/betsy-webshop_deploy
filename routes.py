@@ -1,3 +1,4 @@
+from datetime import datetime
 from random import random
 from flask import render_template, url_for, redirect, flash, request, abort
 from flask.globals import session
@@ -329,6 +330,7 @@ def add_product():
         "stock": add_product_form.stock.data,
         "description": add_product_form.description.data,
         "product_pic": product_pic,
+        "date_posted": datetime.now(),
     }
 
     if check_user_owns_product_by_name(product_name, current_user.id):
