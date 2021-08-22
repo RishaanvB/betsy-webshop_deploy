@@ -86,7 +86,7 @@ def register():
     if register_form.validate_on_submit():
         register_new_user(register_form)
         flash("Your account has been created!", "success")
-        return redirect(url_for("account"))
+        return redirect(url_for("home"))
 
     return render_template(
         "index.html",
