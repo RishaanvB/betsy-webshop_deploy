@@ -59,14 +59,16 @@ class Product(BaseModel):
     description = TextField(null=True)
     price_per_unit = DecimalField(
         constraints=[Check("price_per_unit >= 0")],
-        decimal_places=2,
+        decimal_places=3,
         max_digits=10,
         auto_round=True,
     )
     stock = IntegerField(default=1)
     owner = ForeignKeyField(User, backref="products")
     product_pic = CharField(null=True, default="default_product.jpg")
-    date_posted = DateTimeField(formats="%Y-%m-%d %H:%M", default=datetime.utcnow())
+    date_posted = DateTimeField(
+        formats="%Y-%m-%d %H:%M", default=datetime.fromtimestamp()
+    )
 
 
 Product.add_index(Product.name, Product.description)
