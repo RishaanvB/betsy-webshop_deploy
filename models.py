@@ -33,7 +33,7 @@ class User(BaseModel, UserMixin):
     cc_number = IntegerField(null=True, default=12345)
     username = CharField(index=True, max_length=30, unique=True)
     email = CharField(index=True, max_length=50, unique=True)
-    password = CharField(max_length=20)
+    password = CharField()
     profile_pic = CharField(null=True, default="default_user.jpg")
 
     def get_reset_token(self, expires_seconds=900):

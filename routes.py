@@ -86,8 +86,6 @@ def register():
     if register_form.validate_on_submit():
         register_new_user(register_form)
         flash("Your account has been created!", "success")
-        user = User.get(User.email == register_form.email.data)
-        login_user(user)
         return redirect(url_for("account"))
 
     return render_template(
@@ -167,7 +165,7 @@ def account():
         profile_pic=profile_pic,
         on_account_page=True,
         randomize=randomize,
-        int_splitter=int_splitter
+        int_splitter=int_splitter,
     )
 
 
