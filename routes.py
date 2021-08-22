@@ -66,7 +66,7 @@ def home():
     login_form = LoginForm(prefix="login_form")
     register_form = RegistrationForm(prefix="register_form")
     search_form = SearchForm(prefix="search_form")
-    search_form.search_tag.choices = get_alpha_tag_names()
+    # search_form.search_tag.choices = get_alpha_tag_names()
 
     return render_template(
         "index.html",
@@ -74,7 +74,6 @@ def home():
         login_form=login_form,
         register_form=register_form,
         search_form=search_form,
-        all_products=Product.select(),
     )
 
 
