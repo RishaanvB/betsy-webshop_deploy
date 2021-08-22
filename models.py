@@ -51,6 +51,9 @@ class User(BaseModel, UserMixin):
         return User.get(user_id)
 
 
+time_now = datetime.now()
+
+
 class Product(BaseModel):
     name = CharField(max_length=50)
     description = TextField(null=True)
@@ -63,7 +66,7 @@ class Product(BaseModel):
     stock = IntegerField(default=1)
     owner = ForeignKeyField(User, backref="products")
     product_pic = CharField(null=True, default="default_product.jpg")
-    date_posted = DateTimeField(formats="%Y-%m-%d %H:%M", default=datetime.now())
+    date_posted = DateTimeField(formats="%Y-%m-%d %H:%M", default=datetime.utcnow())
 
 
 Product.add_index(Product.name, Product.description)
