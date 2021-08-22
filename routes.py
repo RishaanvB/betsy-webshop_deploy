@@ -88,6 +88,7 @@ def register():
         flash("Your account has been created!", "success")
         return redirect(url_for("home"))
 
+    flash("Something went wrong with registering..")
     return render_template(
         "index.html",
         title="Register",
