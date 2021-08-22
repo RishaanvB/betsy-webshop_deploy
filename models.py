@@ -25,12 +25,12 @@ class BaseModel(db_wrapper.Model):
 
 
 class User(BaseModel, UserMixin):
-    first_name = CharField(index=True, max_length=30, null=True, default="")
-    last_name = CharField(max_length=120, null=True, default="")
-    address = CharField(max_length=200, null=True, default="")
-    city = CharField(max_length=50, null=True, default="")
+    first_name = CharField(index=True, max_length=30, null=True, default="user")
+    last_name = CharField(max_length=120, null=True, default="lastname")
+    address = CharField(max_length=200, null=True, default="street")
+    city = CharField(max_length=50, null=True, default="city")
     country = CharField(max_length=50, null=True)
-    cc_number = IntegerField(null=True, default="")
+    cc_number = IntegerField(null=True, default=12345)
     username = CharField(index=True, max_length=30, unique=True)
     email = CharField(index=True, max_length=50, unique=True)
     password = CharField(max_length=20)
