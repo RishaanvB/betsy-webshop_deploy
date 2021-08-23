@@ -1,21 +1,21 @@
 # importing db for access to actual peewee database and db_wrapper to access Model
 
+from datetime import datetime
+
 from flask_login.mixins import UserMixin
-from app import db_wrapper, db, app
-from datetime import datetime, timedelta
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+
 from peewee import (
-    BlobField,
     CharField,
     Check,
     DecimalField,
     ForeignKeyField,
     IntegerField,
-    Model,
-    SqliteDatabase,
     TextField,
     DateTimeField,
 )
+
+from app import db_wrapper, db, app
 
 
 class BaseModel(db_wrapper.Model):
@@ -87,7 +87,3 @@ class Transaction(BaseModel):
     transaction_date = DateTimeField(
         formats="%Y-%m-%d %H:%M", default=datetime.utcnow()
     )
-
-
-# db.connect()
-# db.create_tables([User, Product, Tag, ProductTags, Transaction])

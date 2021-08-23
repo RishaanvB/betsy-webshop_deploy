@@ -2,22 +2,20 @@ __winc_id__ = "d7b474e9b3a54d23bca54879a4f1855b"
 __human_name__ = "Betsy Webshop"
 
 import os
-from flask.helpers import url_for
-from flask.templating import render_template
-
-from flask_wtf import file
-from models import User, Product, Tag, ProductTag, Transaction
-from flask import abort
-from flask_mail import Message
 from urllib.parse import urlparse, urljoin
-from flask import request
-from PIL import Image
-from app import app, mail
-from flask_bcrypt import check_password_hash, generate_password_hash
-from flask_login import login_user
-from textblob import Word, TextBlob
 from random import randint
 from math import floor
+
+from flask import abort, request
+from flask.templating import render_template
+from flask_bcrypt import generate_password_hash
+from flask_mail import Message
+
+from PIL import Image
+from textblob import Word, TextBlob
+
+from models import User, Product, Tag, ProductTag, Transaction
+from app import app, mail
 
 
 def get_products_by_name(term) -> Product:
@@ -100,19 +98,12 @@ def get_tags_per_product(product_id) -> list[Tag.name]:
     return [tag.name for tag in tags_per_product]
 
 
-def get_alpha_tag() -> list[Tag]:  # gebruik ik deze?
-    tags = Tag.select().order_by(Tag.name)
-    return [tag for tag in tags]
-
-
-def get_tagnames() -> list:  # gebruik ik deze?
+def get_tagnames() -> list:
     tags = Tag.select()
     return [tag.name for tag in tags]
 
 
-def get_alpha_tag_names() -> tuple[
-    Tag
-]:  # deze kan mss weg of in de form zelf zetten, tags zijn statisch nu
+def get_alpha_tag_names() -> tuple[Tag]:
     """
     Returns a list of tuples (Tag.name, Tag.name)
     With an additional tuple containing (None, "Choose")
@@ -182,7 +173,7 @@ def is_safe_url(target):
 def check_user_owns_product_by_name(product_name, user_id) -> bool:
     """
     Checks if user already owns the product with the same name. If so, returns True,
-    otherwise returns False. Used for checking duplicating names in updating product-info.
+    otherwise returns False. Used for checking duplicate names in updating product-info.
     """
     for product in list_user_products(user_id):
         if product.name == product_name:
@@ -211,18 +202,6 @@ def create_dynamic_formselect(session, form, field):
                 str(f"product_id-{product_id}"),
                 field("Amount", choices=[i for i in range(1, stock + 1)], coerce=int),
             )
-
-
-def get_user_transactions(user_id) -> list[Transaction]:
-    transactions = (
-        Transaction.select()
-        .join(User)
-        .join(Product)
-        .where(Transaction.buyer.id == user_id)
-        .order_by(-Transaction.id)
-        .distinct()
-    )
-    return [transaction for transaction in transactions]
 
 
 def save_picture_data(picture_data, folder, size) -> str:
@@ -335,8 +314,3 @@ def int_splitter(num):
     integer = floor(num)
     decimal = "{:.2f}".format(num)[-2:]
     return (integer, decimal)
-
-
-# from app import db
-# from models import User, Product, Tag, ProductTag
-# from main import create_producttags

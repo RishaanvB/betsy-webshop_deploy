@@ -1,5 +1,5 @@
 from datetime import datetime
-from random import random
+
 from flask import render_template, url_for, redirect, flash, request, abort
 from flask.globals import session
 from flask_login import (
@@ -8,6 +8,7 @@ from flask_login import (
     login_required,
     logout_user,
 )
+
 from wtforms import SelectField
 from playhouse.flask_utils import get_object_or_404, object_list
 
@@ -20,7 +21,6 @@ from main import (
     get_tagnames,
     get_tags_per_product,
     get_products_by_name,
-    int_splitter,
     list_user_products,
     get_alpha_tag_names,
     add_product_to_catalog,
@@ -33,7 +33,6 @@ from main import (
     get_name_on_cc,
     create_hidden_cc,
     create_dynamic_formselect,
-    get_user_transactions,
     register_new_user,
     save_picture_data,
     update_account_db,
@@ -86,7 +85,6 @@ def register():
 
     if register_form.validate_on_submit():
         register_new_user(register_form)
-        print(register_form.auto_login.data, "<--print if autolog is True")
         flash("Your account has been created!", "success")
         if register_form.auto_login.data:
             user = User.get_or_none(User.email == register_form.email.data)
@@ -636,7 +634,10 @@ def reset_token(token):
         change_password(user, reset_password_form)
         user = User.get(User.email == user.email)
         login_user(user)
-        flash("Your password has been changed! Please remember it this time. :)", "success")
+        flash(
+            "Your password has been changed! Please remember it this time. :)",
+            "success",
+        )
         return redirect(url_for("account"))
     return render_template(
         "reset_token.html",
