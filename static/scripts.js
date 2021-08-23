@@ -12,7 +12,8 @@ const calculateTotalPriceInCheckout = () => {
   prices.forEach((price) => {
     totalPrice += +price.innerHTML;
   });
-  totalPriceCheckout.innerHTML = `€ ${totalPrice}`;
+
+  totalPriceCheckout.innerHTML = `€ ${totalPrice.toFixed(2)}`;
 };
 
 const displayTotalPricePerProduct = () => {
@@ -22,7 +23,9 @@ const displayTotalPricePerProduct = () => {
       const id = select.id.split("-").slice(-1);
       const totalSinglePrice = document.getElementById(`price-data-${id}`);
       const pricePerUnit = totalSinglePrice.getAttribute("data-price-per-unit");
-      totalSinglePrice.innerText = `${pricePerUnit * select.value}`;
+      totalSinglePrice.innerText = `${(pricePerUnit * select.value).toFixed(
+        2
+      )}`;
       calculateTotalPriceInCheckout();
     });
   });

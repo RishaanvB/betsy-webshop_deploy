@@ -86,10 +86,15 @@ def register():
 
     if register_form.validate_on_submit():
         register_new_user(register_form)
+        print(register_form.auto_login.data, "<--print if autolog is True")
         flash("Your account has been created!", "success")
+        if register_form.auto_login.data:
+            user = User.get_or_none(User.email == register_form.email.data)
+            login_user(user)
+            return redirect(url_for("account"))
         return redirect(url_for("home"))
 
-    flash("Something went wrong with registering..")
+    flash("Something went wrong with registration.. Please try again.")
     return render_template(
         "index.html",
         title="Register",
@@ -334,16 +339,20 @@ def add_product():
     }
 
     if check_user_owns_product_by_name(product_name, current_user.id):
+        product = Product.get().where(
+            Product.name == product_name & Product.owner.id == current_user.id
+        )
         flash(
-            f"You already own a product with the same name: '{product_name}'", "danger"
+            f"You already own a product with the same name: '{product_name}'", "info"
         )
-        return render_template(
-            "account.html",
-            add_product_form=add_product_form,
-            update_account_form=update_account_form,
-            search_form=SearchForm(prefix="search_form"),
-            user_products=list_user_products(current_user.id),
-        )
+        return redirect(url_for("update_product_page", product_id=product.product.id))
+        # return render_template(
+        #     "account.html",
+        #     add_product_form=add_product_form,
+        #     update_account_form=update_account_form,
+        #     search_form=SearchForm(prefix="search_form"),
+        #     user_products=list_user_products(current_user.id),
+        # )
 
     if add_product_form.validate_on_submit():
         new_product = add_product_to_catalog(current_user.id, product)

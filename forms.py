@@ -15,6 +15,7 @@ from wtforms import (
     FileField,
     widgets,
 )
+from wtforms.fields.core import BooleanField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import InputRequired, Length, Email, EqualTo, DataRequired
 
@@ -53,6 +54,7 @@ class RegistrationForm(FlaskForm):
         ],
     )
     password_confirm = PasswordField("Confirm Password", validators=[InputRequired()])
+    auto_login = BooleanField("Log me in if this works!!!")
     submit = SubmitField("Sign Up")
 
     def validate_username(self, username):
