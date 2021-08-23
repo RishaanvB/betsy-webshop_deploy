@@ -196,7 +196,6 @@ class ProductAmountForm(FlaskForm):
     submit = SubmitField("Finish Payment")
 
 
-# reset password forms
 class ResetRequestForm(FlaskForm):
     email = EmailField(
         "Email", validators=[InputRequired(), Length(min=5, max=50), Email()]

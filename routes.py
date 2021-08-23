@@ -164,6 +164,7 @@ def account():
 
     return render_template(
         "account.html",
+        title="Account",
         add_product_form=add_product_form,
         update_account_form=update_account_form,
         search_form=search_form,
@@ -199,28 +200,6 @@ def update_account():
             search_form=SearchForm(prefix="search_form"),
             user_products=list_user_products(current_user.id),
         )
-
-
-@app.route("/account/transactions")
-@login_required
-def account_transactions():
-    update_account_form = UpdateAccountForm(
-        prefix="update_account", country=current_user.country
-    )
-    add_product_form = AddProductForm(prefix="add-product")
-    search_form = SearchForm(prefix="search_form")
-
-    search_form.search_tag.choices = get_alpha_tag_names()
-    user_transactions = get_user_transactions(current_user.id)
-    return render_template(
-        "account_transactions.html",
-        add_product_form=add_product_form,
-        update_account_form=update_account_form,
-        search_form=search_form,
-        user_transactions=user_transactions,
-        user_products=list_user_products(current_user.id),
-        all_products=Product.select(),
-    )
 
 
 @app.route(
@@ -307,6 +286,7 @@ def no_results(search_query):
 
     return render_template(
         "no_results.html",
+        title="No results :(",
         login_form=login_form,
         register_form=register_form,
         search_form=search_form,
@@ -339,20 +319,13 @@ def add_product():
     }
 
     if check_user_owns_product_by_name(product_name, current_user.id):
-        product = Product.get().where(
-            Product.name == product_name & Product.owner.id == current_user.id
-        )
+        products = Product.select().join(User).where(Product.name == product_name)
+        product = products.select().where(Product.owner.id == current_user.id).get()
         flash(
-            f"You already own a product with the same name: '{product_name}'", "info"
+            f"You already own a product with the same name: '{product_name}'. You can edit your product here.",
+            "info",
         )
-        return redirect(url_for("update_product_page", product_id=product.product.id))
-        # return render_template(
-        #     "account.html",
-        #     add_product_form=add_product_form,
-        #     update_account_form=update_account_form,
-        #     search_form=SearchForm(prefix="search_form"),
-        #     user_products=list_user_products(current_user.id),
-        # )
+        return redirect(url_for("update_product_page", product_id=product.id))
 
     if add_product_form.validate_on_submit():
         new_product = add_product_to_catalog(current_user.id, product)
@@ -371,6 +344,7 @@ def add_product():
     )
     return render_template(
         "account.html",
+        title="Account",
         add_product_form=add_product_form,
         update_account_form=update_account_form,
         search_form=SearchForm(prefix="search_form"),
@@ -402,7 +376,7 @@ def update_product_page(product_id):
 
     return render_template(
         "update_product_page.html",
-        title=product.name,
+        title=f"Update {product.name}",
         product=product,
         all_products=Product.select(),
         login_form=login_form,
@@ -433,7 +407,7 @@ def update_product(product_id):
         prefix="update_account", country=current_user.country
     )
     add_product_form = AddProductForm(prefix="add-product")
-
+    checked_tags = check_tags_in_list(get_tagnames(), get_tags_per_product(product_id))
     if update_product_form.validate_on_submit():
         update_product_db(product_id, update_product_form)
         flash(f"'{product.name}' has been updated!", "success")
@@ -445,7 +419,7 @@ def update_product(product_id):
     )
     return render_template(
         "update_product_page.html",
-        title=product.name,
+        title=f"Update {product.name}",
         product=product,
         login_form=login_form,
         register_form=register_form,
@@ -453,9 +427,7 @@ def update_product(product_id):
         update_product_form=update_product_form,
         update_account_form=update_account_form,
         add_product_form=add_product_form,
-        checked_tags=check_tags_in_list(
-            get_tagnames(), get_tags_per_product(product_id)
-        ),
+        checked_tags=checked_tags,
     )
 
 
@@ -547,9 +519,7 @@ def handle_product_in_cart(product_id):
         session["cart"].append(product.id)
         session.modified = True
         flash(f"'{product.name.capitalize()}' added to cart.", "info")
-        return redirect(
-            request.referrer
-        )  # is flask versie van request.headers.get("Referer")
+        return redirect(request.referrer)
     else:
         flash("Something went wrong", "danger")
         return redirect(request.referrer)
@@ -590,6 +560,7 @@ def checkout_page():
 
     return render_template(
         "checkout.html",
+        title="Checkout",
         login_form=login_form,
         register_form=register_form,
         search_form=search_form,
@@ -619,7 +590,12 @@ def checkout_payment():
 @app.route("/reset_request", methods=["GET", "POST"])
 def reset_request():
     request_form = ResetRequestForm(prefix="reset_request")
+    login_form = LoginForm(prefix="login_form")
+    register_form = RegistrationForm(prefix="register_form")
+    search_form = SearchForm(prefix="search_form")
+    search_form.search_tag.choices = get_alpha_tag_names()
     if current_user.is_authenticated:
+        flash("You need to be logged out to access this page.")
         return redirect(url_for("home"))
     if request_form.validate_on_submit():
         user = User.get(User.email == request_form.email.data)
@@ -629,28 +605,48 @@ def reset_request():
             "info",
         )
         return redirect(url_for("home"))
-    return render_template("reset_request.html", request_form=request_form)
+    return render_template(
+        "reset_request.html",
+        title="Reset Password",
+        request_form=request_form,
+        login_form=login_form,
+        register_form=register_form,
+        search_form=search_form,
+    )
 
 
 @app.route("/reset_password/<token>", methods=["GET", "POST"])
 def reset_token(token):
+    request_form = ResetRequestForm(prefix="reset_request")
+    login_form = LoginForm(prefix="login_form")
+    register_form = RegistrationForm(prefix="register_form")
+    search_form = SearchForm(prefix="search_form")
+    search_form.search_tag.choices = get_alpha_tag_names()
     if current_user.is_authenticated:
+        flash("You need to be logged out to access this page.")
         return redirect(url_for("home"))
     reset_password_form = ResetPasswordForm(prefix="reset_password_form")
     user = User.verify_reset_token(token)
 
     if user is None:
-        flash("That is an invalid/expired token!", "warning")
+        flash("Something went wrong. Please try again.", "warning")
         return redirect(url_for("home"))
 
     if reset_password_form.validate_on_submit():
         change_password(user, reset_password_form)
         user = User.get(User.email == user.email)
         login_user(user)
-        flash("Your password has been changed!", "success")
+        flash("Your password has been changed! Please remember it this time. :)", "success")
         return redirect(url_for("account"))
     return render_template(
-        "reset_token.html", reset_password_form=reset_password_form, token=token
+        "reset_token.html",
+        reset_password_form=reset_password_form,
+        token=token,
+        title="Reset Password",
+        request_form=request_form,
+        login_form=login_form,
+        register_form=register_form,
+        search_form=search_form,
     )
 
 

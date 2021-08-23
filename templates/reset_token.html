@@ -1,3 +1,5 @@
+{% extends "base.html" %}
+
 <!-- inputfield error macro -->
 {% macro with_errors(field) %}
 <!--  -->
@@ -13,30 +15,46 @@ kwargs.pop('class') %}
   {% endfor %}
 </div>
 
-{% else %} {{ field(**kwargs) }} {% endif %} {% endmacro %}
+{% else %} {{ field(**kwargs) }} {% endif %} {% endmacro %} {% block content %}
 
-<form action="{{ url_for('reset_token', token=token) }}" method="POST">
-  {{ reset_password_form.hidden_tag() }}
+<div class="container mx-auto my-auto">
+  <form
+    class="form-signin mx-auto my-4 text-center"
+    action="{{ url_for('reset_token', token=token) }}"
+    method="POST"
+  >
+    {{ reset_password_form.hidden_tag() }}
+    <img
+      class="mb-4 d-block mx-auto"
+      src="{{url_for('static', filename='assets/brand.svg')}}"
+      alt=""
+      width="72"
+      height="57"
+    />
+    <h1 class="h3 mb-3 fw-normal">Reset your password.</h1>
+    <p>Reset your password.</p>
+    <fieldset class="form-group row col mx-auto">
+      <div class="form-floating mt-4 px-2">
+        {{with_errors(reset_password_form.password, class="form-control
+        form-control-lg",placeholder="name@example.com",
+        maxlength="50",autocomplete="password") }}
+        <!--  -->
+        {{reset_password_form.password.label(class="form-control-label") }}
+      </div>
+      <div class="form-floating mt-4 px-2">
+        {{with_errors(reset_password_form.password_confirm, class="form-control
+        form-control-lg",placeholder="name@example.com",
+        maxlength="50",autocomplete="password") }}
+        <!--  -->
+        {{reset_password_form.password_confirm.label(class="form-control-label")
+        }}
+      </div>
+    </fieldset>
 
-  <fieldset class="form-group row">
-    <div class="form-floating mt-4 px-2">
-      {{with_errors(reset_password_form.password, class="form-control
-      form-control-lg",placeholder="name@example.com",
-      maxlength="50",autocomplete="password") }}
-      <!--  -->
-      {{reset_password_form.password.label(class="form-control-label") }}
+    <div class="form-group mt-4 mb-2 d-grid">
+      {{ reset_password_form.submit(class="btn btn-warning") }}
     </div>
-    <div class="form-floating mt-4 px-2">
-      {{with_errors(reset_password_form.password_confirm, class="form-control
-      form-control-lg",placeholder="name@example.com",
-      maxlength="50",autocomplete="password") }}
-      <!--  -->
-      {{reset_password_form.password_confirm.label(class="form-control-label")
-      }}
-    </div>
-  </fieldset>
+  </form>
+</div>
 
-  <div class="form-group mt-4 mb-2 d-grid">
-    {{ reset_password_form.submit(class="btn btn-warning") }}
-  </div>
-</form>
+{% endblock content %}

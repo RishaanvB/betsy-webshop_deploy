@@ -15,8 +15,6 @@ app.config["MAIL_PORT"] = 587
 app.config["MAIL_USERNAME"] = os.environ.get("BETSY_EMAIL")
 app.config["MAIL_PASSWORD"] = os.environ.get("BETSY_PASSWORD")
 app.config["MAIL_USE_TLS"] = True
-print(app.config["DATABASE"], "<--database being used.")
-print(os.environ.get("DATABASE_URL"), "<--printing database_url")
 # wrapper for peewee database
 db_wrapper = FlaskDB(app)
 db = db_wrapper.database  # db is nu een peewee database
