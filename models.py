@@ -50,9 +50,6 @@ class User(BaseModel, UserMixin):
         return User.get(user_id)
 
 
-time_now = datetime.now()
-
-
 class Product(BaseModel):
     name = CharField(max_length=50)
     description = TextField(null=True)
