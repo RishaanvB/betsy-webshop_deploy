@@ -24,21 +24,13 @@
 
         <li class="nav-item dropdown position-relative d-flex align-items-center">             
           <div class="profile-icon-container" id="navbarDropdown" data-bs-toggle="dropdown" aria-expanded="false" >
-            {% if current_user.profile_pic %}
             <img
             style="width: 35px; height: 35px; object-fit: cover"
             class="rounded-circle mx-3 profile-icon d-block align-bottom "
             src="{{(url_for('static', filename='profile_pics/' + current_user.profile_pic ))  }}"
             alt="user thumbnail"
           />
-          {% else %}
-          <img
-          style="width: 35px; height: 35px; object-fit: cover"
-          class="rounded-circle mx-3 profile-icon d-block align-bottom "
-          src="{{(url_for('static', filename='profile_pics/default_user.jpg' ))  }}"
-          alt="user thumbnail"
-        />
-          {% endif %}
+          
           </div>
 
           <ul class="dropdown-menu position-absolute" aria-labelledby="navbarDropdown">
