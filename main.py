@@ -67,7 +67,6 @@ def add_product_to_catalog(user_id, product) -> Product:
         stock=product["stock"],
         description=product["description"],
         product_pic=product["product_pic"],
-        date_posted=product["date_posted"],
         owner=user_id,
     )
     return new_product
