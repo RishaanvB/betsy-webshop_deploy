@@ -185,6 +185,20 @@ def update_account():
         password=current_user.password,
     )
 
+    update_account_form = UpdateAccountForm(
+        prefix="update_account",
+        country=current_user.country,
+        profile_pic=current_user.profile_pic or "default_user.jpg",
+    )
+    add_product_form = AddProductForm(prefix="add-product")
+    search_form = SearchForm(prefix="search_form")
+
+    search_form.search_tag.choices = get_alpha_tag_names()
+    user_products = list_user_products(current_user.id)
+    profile_pic = url_for(
+        "static", filename=f"/profile_pics/{current_user.profile_pic}"
+    ) or url_for("static", filename="/profile_pics/default_user.jpg")
+
     if update_account_form.validate_on_submit():
         update_account_db(current_user.id, update_account_form)
         flash("Your account has been updated!", "success")
@@ -193,10 +207,16 @@ def update_account():
         flash("Something went wrong with your inputs. Please try again", "warning")
         return render_template(
             "account.html",
-            add_product_form=AddProductForm(prefix="add-product"),
+            title="Account",
+            add_product_form=add_product_form,
             update_account_form=update_account_form,
-            search_form=SearchForm(prefix="search_form"),
-            user_products=list_user_products(current_user.id),
+            search_form=search_form,
+            user_products=user_products,
+            all_products=Product.select(),
+            profile_pic=profile_pic,
+            on_account_page=True,
+            randomize=randomize,
+            int_splitter=int_splitter,
         )
 
 
