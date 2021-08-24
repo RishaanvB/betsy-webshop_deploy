@@ -74,7 +74,8 @@ if (
 ) {
   handleCollapseAccountForms();
 }
-
-displayTotalPriceinSideCart();
-calculateTotalPriceInCheckout();
+if (window.location.href.endsWith("checkout")) {
+  calculateTotalPriceInCheckout();
+}
 displayTotalPricePerProduct();
+displayTotalPriceinSideCart();
