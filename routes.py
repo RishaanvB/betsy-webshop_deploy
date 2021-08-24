@@ -575,14 +575,17 @@ def checkout_page():
 @login_required
 def checkout_payment():
     product_amount_form = ProductAmountForm(prefix="product_amount")
+    print(product_amount_form.data)
+    print(request.form)
     if product_amount_form.validate_on_submit():
         for id in session["cart"]:
-            amount_bought = product_amount_form["product_id-" + str(id)].data
-            purchase_product(id, current_user.id, amount_bought)
+            amount_bought = request.form["product_amount-product_id-" + str(id)]
+            purchase_product(id, current_user.id, int(amount_bought))
         flash("Transaction Complete!!!", "info")
         session.pop("cart", None)
         return redirect(url_for("home"))
-    abort(500)
+    flash("Something went wrong with the transaction!")
+    return redirect(url_for("checkout_page"))
 
 
 @app.route("/reset_request", methods=["GET", "POST"])
