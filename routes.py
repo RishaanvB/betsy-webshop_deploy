@@ -296,10 +296,19 @@ def no_results(search_query):
 @app.route("/account/add_product", methods=["GET", "POST"])
 @login_required
 def add_product():
+
     add_product_form = AddProductForm(prefix="add-product")
     update_account_form = UpdateAccountForm(
         prefix="update_account", country=current_user.country
     )
+    search_form = SearchForm(prefix="search_form")
+
+    search_form.search_tag.choices = get_alpha_tag_names()
+    user_products = list_user_products(current_user.id)
+    profile_pic = url_for(
+        "static", filename=f"/profile_pics/{current_user.profile_pic}"
+    )
+
     product_name = add_product_form.name.data.lower()
     if add_product_form.product_pic.data:
         product_pic = save_picture_data(
@@ -313,7 +322,6 @@ def add_product():
         "stock": add_product_form.stock.data,
         "description": add_product_form.description.data,
         "product_pic": product_pic,
-        "date_posted": datetime.now(),
     }
 
     if check_user_owns_product_by_name(product_name, current_user.id):
@@ -345,8 +353,13 @@ def add_product():
         title="Account",
         add_product_form=add_product_form,
         update_account_form=update_account_form,
-        search_form=SearchForm(prefix="search_form"),
-        user_products=list_user_products(current_user.id),
+        search_form=search_form,
+        user_products=user_products,
+        all_products=Product.select(),
+        profile_pic=profile_pic,
+        on_account_page=True,
+        randomize=randomize,
+        int_splitter=int_splitter,
     )
 
 
@@ -575,8 +588,6 @@ def checkout_page():
 @login_required
 def checkout_payment():
     product_amount_form = ProductAmountForm(prefix="product_amount")
-    print(product_amount_form.data)
-    print(request.form)
     if product_amount_form.validate_on_submit():
         for id in session["cart"]:
             amount_bought = request.form["product_amount-product_id-" + str(id)]
