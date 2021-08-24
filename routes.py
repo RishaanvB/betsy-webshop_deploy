@@ -149,7 +149,7 @@ def account():
     update_account_form = UpdateAccountForm(
         prefix="update_account",
         country=current_user.country,
-        profile_pic=current_user.profile_pic,
+        profile_pic=current_user.profile_pic or "default_user.jpg",
     )
     add_product_form = AddProductForm(prefix="add-product")
     search_form = SearchForm(prefix="search_form")
@@ -158,7 +158,7 @@ def account():
     user_products = list_user_products(current_user.id)
     profile_pic = url_for(
         "static", filename=f"/profile_pics/{current_user.profile_pic}"
-    )
+    ) or url_for("static", filename="/profile_pics/default_user.jpg")
 
     return render_template(
         "account.html",
@@ -181,7 +181,7 @@ def update_account():
     update_account_form = UpdateAccountForm(
         prefix="update_account",
         country=current_user.country,
-        profile_pic=current_user.profile_pic,
+        profile_pic=current_user.profile_pic or "default_user.jpg",
         password=current_user.password,
     )
 
@@ -307,7 +307,7 @@ def add_product():
     user_products = list_user_products(current_user.id)
     profile_pic = url_for(
         "static", filename=f"/profile_pics/{current_user.profile_pic}"
-    )
+    ) or url_for("static", filename="/profile_pics/default_user.jpg")
 
     product_name = add_product_form.name.data.lower()
     if add_product_form.product_pic.data:
@@ -489,7 +489,9 @@ def user_profile(user_id):
 
     users = User.select().where(User.id == user_id)
     user = get_object_or_404(users, User.id == user_id)
-    profile_pic = url_for("static", filename=f"/profile_pics/{user.profile_pic}")
+    profile_pic = url_for(
+        "static", filename=f"/profile_pics/{user.profile_pic}"
+    ) or url_for("static", filename="/profile_pics/default_user.jpg")
     return render_template(
         "user_profile.html",
         title=user.username,
