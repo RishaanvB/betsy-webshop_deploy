@@ -27,7 +27,7 @@
             <img
             style="width: 35px; height: 35px; object-fit: cover"
             class="rounded-circle mx-3 profile-icon d-block align-bottom "
-            src="{{(url_for('static', filename='/profile_pics/' + current_user.profile_pic )) or (url_for('static', filename='/profile_pics/default_user.jpg' )) }}"
+            src="{{(url_for('static', filename='profile_pics/' + current_user.profile_pic )) or (url_for('static', filename='profile_pics/default_user.jpg' )) }}"
             alt="user thumbnail"
           />
           </div>
