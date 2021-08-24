@@ -74,6 +74,7 @@ def home():
         login_form=login_form,
         register_form=register_form,
         search_form=search_form,
+        all_products=Product.select()
     )
 
 
@@ -257,7 +258,7 @@ def search_results(search_term, search_tag):
         "search_results.html",
         query=all_products_on_search,
         context_variable="product_list",
-        paginate_by=4,
+        paginate_by=12,
         page=page,
         title="Search",
         product_count=product_count,
