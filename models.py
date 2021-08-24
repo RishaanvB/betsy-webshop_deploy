@@ -26,7 +26,7 @@ class BaseModel(db_wrapper.Model):
 class User(BaseModel, UserMixin):
     first_name = CharField(index=True, max_length=30, null=True, default="user")
     last_name = CharField(max_length=120, null=True, default="lastname")
-    address = CharField(max_length=200, null=True, default="street")
+    address = CharField(max_length=200, null=True, default="street123")
     city = CharField(max_length=50, null=True, default="city")
     country = CharField(max_length=50, null=True)
     cc_number = IntegerField(null=True, default=12345)
